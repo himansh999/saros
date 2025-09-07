@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saros SDK Docs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="https://app.saros.xyz/favicon.ico">
+    <style>
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2467c5;
+        }
+
+        /* Syntax Highlighting-like styles for code blocks */
+        pre {
+            background-color: #1a1a1a;
+            color: #f8f8f2;
+            padding: 1.25rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        code .token.comment { color: #6272a4; }
+        code .token.string { color: #f1fa8c; }
+        code .token.keyword { color: #ff79c6; }
+        code .token.function { color: #50fa7b; }
+        code .token.constant { color: #bd93f9; }
+        code .token.punctuation { color: #f8f8f2; }
+        code .token.number { color: #bd93f9; }
+        code .token.operator { color: #ff79c6; }
+        code .token.class-name { color: #8be9fd; }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Active sidebar link style */
+        .sidebar-link.active {
+            background-color: #334155;
+            color: #f1f5f9;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-300 font-sans antialiased">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="bg-slate-800 w-64 min-w-[256px] p-6 fixed lg:relative -translate-x-full lg:translate-x-0 h-screen lg:h-auto overflow-y-auto transition-transform duration-300 ease-in-out z-20">
+            <h1 class="text-2xl font-bold text-white mb-8"><strong>Saros SDK Docs</strong></h1>
+            <nav class="space-y-4">
+                <div>
+                    <a href="#introduction" class="sidebar-link block font-semibold text-lg hover:text-white transition-colors duration-200">Introduction</a>
+                </div>
+                <div>
+                    <a href="#quick-start" class="sidebar-link block font-semibold text-lg hover:text-white transition-colors duration-200">Quick Start</a>
+                </div>
+                <div>
+                    <h3 class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-2">Tutorials</h3>
+                    <ul class="space-y-2 border-l-2 border-slate-700 ml-2">
+                        <li><a href="#tutorial-swap" class="sidebar-link block pl-4 py-1 text-slate-400 hover:text-white transition-colors duration-200">Swapping Tokens</a></li>
+                        <li><a href="#tutorial-provide-liquidity" class="sidebar-link block pl-4 py-1 text-slate-400 hover:text-white transition-colors duration-200">Providing Liquidity</a></li>
+                        <li><a href="#tutorial-remove-liquidity" class="sidebar-link block pl-4 py-1 text-slate-400 hover:text-white transition-colors duration-200">Removing Liquidity</a></li>
+                    </ul>
+                </div>
+                <div>
+                     <a href="#code-examples" class="sidebar-link block font-semibold text-lg hover:text-white transition-colors duration-200">Runnable Code Examples</a>
+                </div>
+                <div>
+                     <a href="#api-reference" class="sidebar-link block font-semibold text-lg hover:text-white transition-colors duration-200">API Reference</a>
+                </div>
+                 <div>
+                     <a href="#sdk-analysis" class="sidebar-link block font-semibold text-lg hover:text-white transition-colors duration-200">SDK Analysis (Bonus)</a>
+                </div>
+                 <div>
+                    <a href="https://docs.saros.xyz/" target="_blank" class="sidebar-link flex items-center gap-2 font-semibold text-lg hover:text-white transition-colors duration-200">
+                        Saros Official Docs 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+                            <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+                        </svg>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Overlay for mobile -->
+        <div id="overlay" class="fixed inset-0 bg-black opacity-50 hidden z-10 lg:hidden" onclick="toggleSidebar()"></div>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 md:p-10 lg:p-12 overflow-y-auto">
+            <!-- Mobile Header -->
+            <div class="lg:hidden flex items-center justify-between mb-6">
+                 <h1 class="text-2xl font-bold text-white"><strong>Saros SDK Docs</strong></h1>
+                <button id="menu-button" onclick="toggleSidebar()" class="p-2 rounded-md hover:bg-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="max-w-4xl mx-auto space-y-16">
+                <!-- Introduction -->
+                <section id="introduction" class="prose prose-invert max-w-none prose-h1:text-4xl prose-h1:font-bold prose-h1:text-white prose-h2:text-2xl prose-h2:font-bold prose-h2:text-white prose-p:leading-relaxed prose-a:text-cyan-400 hover:prose-a:text-cyan-300">
+                    <h1>Welcome to the Saros SDK Documentation</h1>
+                    <p>This site provides comprehensive guides, tutorials, and examples to help you start building on the Solana blockchain with the Saros Finance SDKs.</p>
+                    <p>This documentation is designed to be a practical, developer-first resource that cuts through the complexity and accelerates your time to deployment. Whether you're integrating swaps, providing liquidity, or building complex DeFi applications, these guides are structured to get you from zero to shipping as quickly as possible.</p>
+                    <p>This documentation was created for the <a href="https://earn.superteam.fun/listing/saros-sdk-guide-challenge" target="_blank">Saros SDK Guide Challenge on Superteam Earn</a>.</p>
+                    
+                    <h2>Target SDKs</h2>
+                    <p>This guide focuses primarily on the <code>@saros-finance/dlmm-sdk</code>, but the principles can be applied to other Saros SDKs.</p>
+                    <ul>
+                        <li><strong><code>@saros-finance/dlmm-sdk</code> (Focus)</strong>: A dedicated TypeScript SDK for the Dynamic Liquidity Market Maker (DLMM).</li>
+                        <li><strong><code>@saros-finance/sdk</code></strong>: The primary TypeScript SDK for the classic AMM, Staking, and Farming.</li>
+                        <li><strong><code>saros-dlmm-sdk-rs</code></strong>: The Rust SDK for interacting with the DLMM from on-chain programs.</li>
+                    </ul>
+                    <p>Select a topic from the sidebar to get started.</p>
+                </section>
+
+                <!-- Quick Start -->
+                <section id="quick-start" class="prose prose-invert max-w-none prose-h1:text-4xl prose-h1:font-bold prose-h1:text-white prose-h2:text-2xl prose-h2:font-bold prose-h2:text-white prose-p:leading-relaxed prose-a:text-cyan-400">
+                    <h1>Quick Start: Your First Interaction</h1>
+                    <p>This guide will walk you through setting up a project with the Saros DLMM SDK and performing your first read-only interaction with the protocol.</p>
+                    
+                    <h2>1. Project Setup & Installation</h2>
+                    <p>Create a new directory for your project and initialize a <code>package.json</code> file. We'll use TypeScript for this example.</p>
+<pre><code><span class="token comment">// Using bash</span>
+<span class="token function">mkdir</span> saros-starter
+<span class="token function">cd</span> saros-starter
+npm init -y
+npm <span class="token function">install</span> @saros-finance/dlmm-sdk @solana/web3.js @coral-xyz/anchor bs58
+npm <span class="token function">install</span> -D typescript @types/node ts-node</code></pre>
+                    <p>Next, create a <code>tsconfig.json</code> file to configure TypeScript:</p>
+<pre><code><span class="token comment">// tsconfig.json</span>
+{
+  <span class="token string">"compilerOptions"</span>: {
+    <span class="token string">"target"</span>: <span class="token string">"es2020"</span>,
+    <span class="token string">"module"</span>: <span class="token string">"commonjs"</span>,
+    <span class="token string">"esModuleInterop"</span>: <span class="token constant">true</span>,
+    <span class="token string">"forceConsistentCasingInFileNames"</span>: <span class="token constant">true</span>,
+    <span class="token string">"strict"</span>: <span class="token constant">true</span>,
+    <span class="token string">"skipLibCheck"</span>: <span class="token constant">true</span>
+  }
+}</code></pre>
+
+                    <h2>2. Setting up the Connection</h2>
+                    <p>Create a new file named <code>index.ts</code>. In this file, we'll set up our connection to the Solana devnet and create a wallet instance.</p>
+                    <div class="border-l-4 border-cyan-500 bg-cyan-900/20 p-4 rounded-r-lg my-4">
+                        <p class="font-bold text-cyan-400">Info</p>
+                        <p>For this example, we're generating a new keypair. In a real-world frontend application, you would use a wallet adapter (like <code>@solana/wallet-adapter-react</code>) to get the user's public key and sign transactions.</p>
+                    </div>
+
+<pre><code><span class="token comment">// index.ts</span>
+<span class="token keyword">import</span> { <span class="token class-name">Connection</span>, <span class="token class-name">Keypair</span>, <span class="token class-name">PublicKey</span> } <span class="token keyword">from</span> <span class="token string">'@solana/web3.js'</span>;
+<span class="token keyword">import</span> { <span class="token class-name">AnchorProvider</span>, <span class="token class-name">Program</span> } <span class="token keyword">from</span> <span class="token string">'@coral-xyz/anchor'</span>;
+<span class="token keyword">import</span> { <span class="token class-name">IDL</span> <span class="token keyword">as</span> <span class="token class-name">SarosDlmmIdl</span> } <span class="token keyword">from</span> <span class="token string">'@saros-finance/dlmm-sdk'</span>;
+<span class="token keyword">import</span> bs58 <span class="token keyword">from</span> <span class="token string">'bs58'</span>;
+
+<span class="token comment">// --- Configuration ---</span>
+<span class="token keyword">const</span> <span class="token constant">RPC_URL</span> = <span class="token string">'https://api.devnet.solana.com'</span>;
+<span class="token keyword">const</span> <span class="token constant">PROGRAM_ID</span> = <span class="token keyword">new</span> <span class="token class-name">PublicKey</span>(<span class="token string">'LBUZKhRxPF3XG2A2qRFF2a8sFkvv4noG2_your_program_id'</span>); <span class="token comment">// Replace with actual Program ID</span>
+<span class="token keyword">const</span> <span class="token constant">PAIR_ADDRESS</span> = <span class="token keyword">new</span> <span class="token class-name">PublicKey</span>(<span class="token string">'58oQChx4yWmvKdwLLZzBi4ChoCc2fqbAaGgBG5eGgX2T'</span>); <span class="token comment">// Example SOL/USDC pair</span>
+
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">main</span>() {
+  console.<span class="token function">log</span>(<span class="token string">"Setting up connection..."</span>);
+  <span class="token keyword">const</span> connection = <span class="token keyword">new</span> <span class="token class-name">Connection</span>(<span class="token constant">RPC_URL</span>, <span class="token string">'confirmed'</span>);
+  
+  <span class="token keyword">const</span> secretKey = bs58.<span class="token function">decode</span>(<span class="token string">'your_base58_secret_key_here'</span>); <span class="token comment">// Replace with a devnet wallet secret key</span>
+  <span class="token keyword">const</span> wallet = <span class="token class-name">Keypair</span>.<span class="token function">fromSecretKey</span>(secretKey);
+  <span class="token keyword">const</span> provider = <span class="token keyword">new</span> <span class="token class-name">AnchorProvider</span>(connection, { <span class="token keyword">publicKey</span>: wallet.<span class="token keyword">publicKey</span>, <span class="token function">signTransaction</span>: wallet.<span class="token function">signTransaction</span>, <span class="token function">signAllTransactions</span>: wallet.<span class="token function">signAllTransactions</span> }, { <span class="token keyword">commitment</span>: <span class="token string">'confirmed'</span> });
+
+  console.<span class="token function">log</span>(<span class="token string">"Initializing Saros DLMM program..."</span>);
+  <span class="token keyword">const</span> program = <span class="token keyword">new</span> <span class="token class-name">Program</span>(<span class="token class-name">SarosDlmmIdl</span>, <span class="token constant">PROGRAM_ID</span>, provider);
+
+  console.<span class="token function">log</span>(<span class="token string">`Fetching state for pair: </span><span class="token interpolation"><span class="token punctuation">${</span><span class="token constant">PAIR_ADDRESS</span>.<span class="token function">toBase58</span>()<span class="token punctuation">}</span></span><span class="token string">`</span>);
+  
+  <span class="token keyword">try</span> {
+    <span class="token keyword">const</span> pairState = <span class="token keyword">await</span> program.<span class="token keyword">account</span>.<span class="token keyword">pair</span>.<span class="token function">fetch</span>(<span class="token constant">PAIR_ADDRESS</span>);
+    
+    console.<span class="token function">log</span>(<span class="token string">"\n--- Pair State Fetched Successfully! ---"</span>);
+    console.<span class="token function">log</span>(<span class="token string">`Token X Mint: </span><span class="token interpolation"><span class="token punctuation">${</span>pairState.<span class="token keyword">tokenMintX</span>.<span class="token function">toBase58</span>()<span class="token punctuation">}</span></span><span class="token string">`</span>);
+    console.<span class="token function">log</span>(<span class="token string">`Token Y Mint: </span><span class="token interpolation"><span class="token punctuation">${</span>pairState.<span class="token keyword">tokenMintY</span>.<span class="token function">toBase58</span>()<span class="token punctuation">}</span></span><span class="token string">`</span>);
+    console.<span class="token function">log</span>(<span class="token string">`Active Bin ID: </span><span class="token interpolation"><span class="token punctuation">${</span>pairState.<span class="token keyword">activeId</span>.<span class="token function">toString</span>()<span class="token punctuation">}</span></span><span class="token string">`</span>);
+    console.<span class="token function">log</span>(<span class="token string">`Bin Step: </span><span class="token interpolation"><span class="token punctuation">${</span>pairState.<span class="token keyword">binStep</span><span class="token punctuation">}</span></span><span class="token string">`</span>);
+    console.<span class="token function">log</span>(<span class="token string">"---------------------------------------\n"</span>);
+  } <span class="token keyword">catch</span> (error) {
+    console.<span class="token function">error</span>(<span class="token string">"Failed to fetch pair state:"</span>, error);
+  }
+}
+
+<span class="token function">main</span>().<span class="token keyword">catch</span>(err => {
+  console.<span class="token function">error</span>(err);
+});</code></pre>
+
+                    <h2>3. Running the Script</h2>
+                    <p>You'll need to replace the placeholder <code>PROGRAM_ID</code> and <code>your_base58_secret_key_here</code> with current values. Execute your script using <code>ts-node</code>:</p>
+<pre><code><span class="token comment">// Using bash</span>
+npx ts-node index.ts</code></pre>
+                    <p>If successful, you will see the on-chain state of the liquidity pair printed in your console. Congratulations, you've successfully interacted with the Saros DLMM protocol!</p>
+                </section>
+                
+                <!-- Tutorials -->
+                <section id="tutorial-swap" class="prose prose-invert max-w-none prose-h1:text-4xl prose-h1:font-bold prose-h1:text-white prose-h2:text-2xl prose-h2:font-bold prose-h2:text-white prose-p:leading-relaxed prose-a:text-cyan-400">
+                    <h1>Tutorial: Swapping Tokens</h1>
+                    <p>This tutorial provides a step-by-step guide to executing a token swap on a Saros DLMM pool using the SDK.</p>
+                     <div class="border-l-4 border-cyan-500 bg-cyan-900/20 p-4 rounded-r-lg my-4">
+                        <p class="font-bold text-cyan-400">Info</p>
+                        <p>You can find a complete, runnable script for this tutorial in the <a href="#code-examples">Runnable Code Examples</a> section.</p>
+                    </div>
+
+                    <h2>Core Concepts</h2>
+                    <ul>
+                        <li><strong>Pair & Vaults</strong>: A DLMM pool is called a <code>Pair</code>. It holds tokens in two separate <code>Vaults</code> (one for Token X, one for Token Y). When you swap, you're sending tokens to one vault and receiving them from the other.</li>
+                        <li><strong>Bin Arrays</strong>: Liquidity in a DLMM pool is organized into discrete price ranges called <code>bins</code>. These bins are stored on-chain in <code>Bin Arrays</code>. Any swap or liquidity operation needs to reference these arrays.</li>
+                        <li><strong>PDAs (Program Derived Addresses)</strong>: Most accounts you interact with (vaults, bin arrays) are not standard public keys but are derived from the program's ID and certain seeds. You must derive these addresses correctly in your code.</li>
+                    </ul>
+
+                    <h2>Step-by-Step Swap Process</h2>
+                    <h3>Step 1: Initialize SDK and Define Constants</h3>
+                    <p>First, set up your connection, wallet, and initialize the Anchor program as shown in the <strong>Quick Start</strong> guide. You will also need the addresses for the pair, the token mints, and your personal Associated Token Accounts (ATAs) for those mints.</p>
+<pre><code><span class="token comment">// (Assuming connection, wallet, provider, and program are initialized)</span>
+<span class="token keyword">const</span> <span class="token constant">PAIR_ADDRESS</span> = <span class="token keyword">new</span> <span class="token class-name">PublicKey</span>(<span class="token string">'...'</span>);
+<span class="token keyword">const</span> <span class="token constant">TOKEN_X_MINT</span> = <span class="token keyword">new</span> <span class="token class-name">PublicKey</span>(<span class="token string">'...'</span>); <span class="token comment">// e.g., USDC</span>
+<span class="token keyword">const</span> <span class="token constant">TOKEN_Y_MINT</span> = <span class="token keyword">new</span> <span class="token class-name">PublicKey</span>(<span class="token string">'...'</span>); <span class="token comment">// e.g., SOL</span>
+<span class="token comment">// Your token accounts</span>
+<span class="token keyword">const</span> <span class="token constant">USER_VAULT_X</span> = <span class="token keyword">new</span> <span class="token class-name">PublicKey</span>(<span class="token string">'...'</span>);
+<span class="token keyword">const</span> <span class="token constant">USER_VAULT_Y</span> = <span class="token keyword">new</span> <span class="token class-name">PublicKey</span>(<span class="token string">'...'</span>);</code></pre>
+                    
+                    <h3>Step 2: Derive Required PDAs</h3>
+                    <p>The <code>swap</code> instruction requires several accounts. We need to derive the PDAs for the pair's token vaults and the active bin arrays.</p>
+<pre><code><span class="token keyword">import</span> { <span class="token class-name">PublicKey</span> } <span class="token keyword">from</span> <span class="token string">'@solana/web3.js'</span>;
+<span class="token keyword">import</span> { <span class="token class-name">utils</span> } <span class="token keyword">from</span> <span class="token string">'@coral-xyz/anchor'</span>;
+<span class="token comment">// Derive pair's token vaults</span>
+<span class="token keyword">const</span> [tokenVaultXPda] = <span class="token class-name">PublicKey</span>.<span class="token function">findProgramAddressSync</span>(
+    [<span class="token class-name">Buffer</span>.<span class="token function">from</span>(<span class="token string">"token_vault"</span>), <span class="token constant">PAIR_ADDRESS</span>.<span class="token function">toBuffer</span>(), <span class="token constant">TOKEN_X_MINT</span>.<span class="token function">toBuffer</span>()],
+    program.<span class="token keyword">programId</span>
+);
+<span class="token comment">// Derive bin arrays. Most pairs use indices 0 and 1.</span>
+<span class="token keyword">const</span> [binArrayLowerPda] = <span class="token class-name">PublicKey</span>.<span class="token function">findProgramAddressSync</span>(
+    [<span class="token class-name">Buffer</span>.<span class="token function">from</span>(<span class="token string">"bin_array"</span>), <span class="token constant">PAIR_ADDRESS</span>.<span class="token function">toBuffer</span>(), <span class="token class-name">Buffer</span>.<span class="token function">from</span>(<span class="token keyword">new</span> <span class="token class-name">Uint8Array</span>(<span class="token keyword">new</span> <span class="token class-name">BN</span>(<span class="token number">0</span>).<span class="token function">toArray</span>(<span class="token string">"le"</span>, <span class="token number">4</span>)))],
+    program.<span class="token keyword">programId</span>
+);</code></pre>
+
+                    <h3>Step 3: Construct and Send the Transaction</h3>
+                    <p>Now we can build the <code>swap</code> instruction. We'll perform an <strong>Exact Input</strong> swap, meaning we specify exactly how much we want to send.</p>
+<pre><code><span class="token keyword">import</span> { <span class="token class-name">BN</span> } <span class="token keyword">from</span> <span class="token string">'@coral-xyz/anchor'</span>;
+<span class="token comment">// Swap 1 USDC (assuming 6 decimals) for SOL</span>
+<span class="token keyword">const</span> amountIn = <span class="token keyword">new</span> <span class="token class-name">BN</span>(<span class="token number">1_000_000</span>); 
+<span class="token comment">// Set slippage tolerance. 0 means we accept any amount out.</span>
+<span class="token keyword">const</span> otherAmountThreshold = <span class="token keyword">new</span> <span class="token class-name">BN</span>(<span class="token number">0</span>);
+<span class="token comment">// `true` to swap X for Y, `false` for Y for X</span>
+<span class="token keyword">const</span> swapForY = <span class="token constant">true</span>; 
+
+console.<span class="token function">log</span>(<span class="token string">"Sending swap transaction..."</span>);
+<span class="token keyword">const</span> txSignature = <span class="token keyword">await</span> program.<span class="token keyword">methods</span>
+    .<span class="token function">swap</span>(amountIn, otherAmountThreshold, swapForY, { <span class="token keyword">exactInput</span>: {} })
+    .<span class="token function">accounts</span>({
+        <span class="token keyword">pair</span>: <span class="token constant">PAIR_ADDRESS</span>,
+        <span class="token keyword">binArrayLower</span>: binArrayLowerPda,
+        <span class="token keyword">binArrayUpper</span>: binArrayUpperPda,
+        <span class="token keyword">tokenMintX</span>: <span class="token constant">TOKEN_X_MINT</span>,
+        <span class="token keyword">userVaultY</span>: <span class="token constant">USER_VAULT_Y</span>,
+        <span class="token keyword">user</span>: wallet.<span class="token keyword">publicKey</span>,
+    })
+    .<span class="token function">rpc</span>();
+
+console.<span class="token function">log</span>(<span class="token string">`Swap successful! Transaction signature: </span><span class="token interpolation"><span class="token punctuation">${</span>txSignature<span class="token punctuation">}</span></span><span class="token string">`</span>);</code></pre>
+                </section>
+
+                <section id="tutorial-provide-liquidity" class="prose prose-invert max-w-none prose-h1:text-4xl prose-h1:font-bold prose-h1:text-white prose-h2:text-2xl prose-h2:font-bold prose-h2:text-white prose-p:leading-relaxed prose-a:text-cyan-400">
+                    <h1>Tutorial: Providing Liquidity</h1>
+                    <p>Adding liquidity to a Saros DLMM pool is a two-step process:</p>
+                    <ol>
+                        <li><strong>Create a Position</strong>: This mints an NFT that represents your ownership and defines the price range (bins) of your liquidity.</li>
+                        <li><strong>Increase Position</strong>: This is where you actually deposit your tokens into the range defined by your position NFT.</li>
+                    </ol>
+
+                    <h2>Step 1: Create a Position</h2>
+                    <p>First, we need to create a new mint for our position NFT and then call the <code>createPosition</code> instruction. This instruction sets the lower and upper bin boundaries for our liquidity.</p>
+<pre><code><span class="token keyword">import</span> { <span class="token class-name">createMint</span> } <span class="token keyword">from</span> <span class="token string">"@solana/spl-token"</span>;
+<span class="token keyword">import</span> { <span class="token constant">TOKEN_2022_PROGRAM_ID</span>, <span class="token constant">ASSOCIATED_TOKEN_PROGRAM_ID</span> } <span class="token keyword">from</span> <span class="token string">"@solana/spl-token"</span>;
+
+<span class="token comment">// Define the range relative to the active price bin</span>
+<span class="token keyword">const</span> relativeBinIdLeft = <span class="token number">-10</span>;  <span class="token comment">// 10 bins to the left</span>
+<span class="token keyword">const</span> relativeBinIdRight = <span class="token number">10</span>; <span class="token comment">// 10 bins to the right</span>
+
+<span class="token keyword">const</span> positionMint = <span class="token keyword">await</span> <span class="token function">createMint</span>(
+    connection, wallet.<span class="token keyword">payer</span>, wallet.<span class="token keyword">publicKey</span>, <span class="token constant">null</span>, <span class="token number">0</span>, <span class="token keyword">undefined</span>, <span class="token keyword">undefined</span>, <span class="token constant">TOKEN_2022_PROGRAM_ID</span>
+);
+<span class="token comment">// Derive PDAs</span>
+<span class="token keyword">const</span> [positionPda] = <span class="token class-name">PublicKey</span>.<span class="token function">findProgramAddressSync</span>([...]);
+<span class="token keyword">const</span> [positionTokenAccount] = <span class="token class-name">PublicKey</span>.<span class="token function">findProgramAddressSync</span>([...]);
+
+<span class="token keyword">await</span> program.<span class="token keyword">methods</span>
+    .<span class="token function">createPosition</span>(<span class="token keyword">new</span> <span class="token class-name">BN</span>(relativeBinIdLeft), <span class="token keyword">new</span> <span class="token class-name">BN</span>(relativeBinIdRight))
+    .<span class="token function">accounts</span>({...})
+    .<span class="token function">signers</span>([positionMint])
+    .<span class="token function">rpc</span>();
+console.<span class="token function">log</span>(<span class="token string">`Position NFT created: </span><span class="token interpolation"><span class="token punctuation">${</span>positionMint.<span class="token function">toBase58</span>()<span class="token punctuation">}</span></span><span class="token string">`</span>);</code></pre>
+                    
+                    <h2>Step 2: Increase Position (Deposit Tokens)</h2>
+                    <p>With a position created, we can now deposit tokens. The key part is defining the <code>liquidityDistribution</code>. This tells the program how to allocate your tokens across the bins. For this example, we'll use a uniform "Spot" distribution.</p>
+<pre><code><span class="token keyword">const</span> amountX = <span class="token keyword">new</span> <span class="token class-name">BN</span>(<span class="token number">1_000_000</span>); <span class="token comment">// Amount of Token X</span>
+<span class="token keyword">const</span> amountY = <span class="token keyword">new</span> <span class="token class-name">BN</span>(<span class="token number">1_000_000</span>); <span class="token comment">// Amount of Token Y</span>
+
+<span class="token comment">// Create a uniform distribution across our range</span>
+<span class="token keyword">const</span> liquidityDistribution = [];
+<span class="token keyword">const</span> totalBins = relativeBinIdRight - relativeBinIdLeft + <span class="token number">1</span>;
+<span class="token keyword">const</span> distributionPerBin = <span class="token number">10000</span> / totalBins;
+
+<span class="token keyword">for</span> (<span class="token keyword">let</span> i = relativeBinIdLeft; i <= relativeBinIdRight; i++) {
+    <span class="token keyword">if</span> (i < <span class="token number">0</span>) {
+        liquidityDistribution.<span class="token function">push</span>({ <span class="token keyword">relativeBinId</span>: i, <span class="token keyword">distributionX</span>: distributionPerBin, <span class="token keyword">distributionY</span>: <span class="token number">0</span> });
+    } <span class="token keyword">else</span> <span class="token keyword">if</span> (i > <span class="token number">0</span>) {
+        liquidityDistribution.<span class="token function">push</span>({ <span class="token keyword">relativeBinId</span>: i, <span class="token keyword">distributionX</span>: <span class="token number">0</span>, <span class="token keyword">distributionY</span>: distributionPerBin });
+    } <span class="token keyword">else</span> {
+        liquidityDistribution.<span class="token function">push</span>({ <span class="token keyword">relativeBinId</span>: i, <span class="token keyword">distributionX</span>: distributionPerBin / <span class="token number">2</span>, <span class="token keyword">distributionY</span>: distributionPerBin / <span class="token number">2</span> });
+    }
+}
+<span class="token keyword">await</span> program.<span class="token keyword">methods</span>
+    .<span class="token function">increasePosition</span>(amountX, amountY, liquidityDistribution)
+    .<span class="token function">accounts</span>({...})
+    .<span class="token function">rpc</span>();
+console.<span class="token function">log</span>(<span class="token string">"Successfully added liquidity!"</span>);</code></pre>
+                </section>
+
+                <section id="tutorial-remove-liquidity" class="prose prose-invert max-w-none prose-h1:text-4xl prose-h1:font-bold prose-h1:text-white prose-h2:text-2xl prose-h2:font-bold prose-h2:text-white prose-p:leading-relaxed prose-a:text-cyan-400">
+                    <h1>Tutorial: Removing Liquidity</h1>
+                    <p>This guide explains how to withdraw your tokens from a Saros DLMM liquidity position. You can either partially withdraw or close the position entirely.</p>
+                     
+                    <h2>Core Concepts</h2>
+                    <ul>
+                        <li><strong>Position NFT</strong>: Your liquidity is tied to your Position NFT. You need its mint address to identify which position to withdraw from.</li>
+                        <li><strong>Shares</strong>: When you deposit liquidity, you receive "shares" in each bin. To withdraw, you specify how many shares you want to remove from each bin.</li>
+                    </ul>
+
+                    <h2>Step 1: Find Your Position and Calculate Shares to Remove</h2>
+                    <p>First, you need the mint address of your Position NFT. Let's say we want to remove 50% of our liquidity. We need to fetch the current state of our position to see how many shares we have.</p>
+<pre><code><span class="token comment">// (Assuming program, positionPda are already defined)</span>
+<span class="token keyword">const</span> positionState = <span class="token keyword">await</span> program.<span class="token keyword">account</span>.<span class="token keyword">position</span>.<span class="token function">fetch</span>(positionPda);
+<span class="token keyword">const</span> percentageToRemove = <span class="token number">5000</span>; <span class="token comment">// 50% in basis points</span>
+<span class="token keyword">const</span> sharesToRemove = positionState.<span class="token keyword">liquidityShares</span>.<span class="token function">map</span>(currentShares => {
+    <span class="token keyword">return</span> currentShares.<span class="token function">mul</span>(<span class="token keyword">new</span> <span class="token class-name">BN</span>(percentageToRemove)).<span class="token function">div</span>(<span class="token keyword">new</span> <span class="token class-name">BN</span>(<span class="token number">10000</span>));
+});</code></pre>
+                    
+                    <h2>Step 2: Decrease the Position</h2>
+                    <p>With the <code>sharesToRemove</code> array calculated, we can call the <code>decreasePosition</code> instruction. This will burn the specified shares and transfer the corresponding tokens back to your wallet.</p>
+<pre><code>console.<span class="token function">log</span>(<span class="token string">"Removing 50% of liquidity..."</span>);
+<span class="token keyword">const</span> txSignature = <span class="token keyword">await</span> program.<span class="token keyword">methods</span>
+    .<span class="token function">decreasePosition</span>(sharesToRemove)
+    .<span class="token function">accounts</span>({...})
+    .<span class="token function">rpc</span>();
+console.<span class="token function">log</span>(<span class="token string">`Successfully removed liquidity! Tx: </span><span class="token interpolation"><span class="token punctuation">${</span>txSignature<span class="token punctuation">}</span></span><span class="token string">`</span>);</code></pre>
+
+                     <h2>Closing a Position (Optional)</h2>
+                    <p>If you want to remove 100% of your liquidity, use the <code>closePosition</code> instruction. It withdraws everything and closes the position account.</p>
+<pre><code><span class="token keyword">await</span> program.<span class="token keyword">methods</span>.<span class="token function">closePosition</span>().<span class="token function">accounts</span>({...}).<span class="token function">rpc</span>();</code></pre>
+                </section>
+
+                <section id="code-examples" class="prose prose-invert max-w-none prose-h1:text-4xl prose-h1:font-bold prose-h1:text-white prose-h2:text-2xl prose-h2:font-bold prose-h2:text-white prose-p:leading-relaxed prose-a:text-cyan-400">
+                    <h1>Runnable Code Examples</h1>
+                    <p>This section provides complete, self-contained TypeScript scripts for the main SDK functionalities. You can copy, paste, and run these directly after filling in your wallet's secret key and the required public keys.</p>
+                     <div class="border-l-4 border-yellow-500 bg-yellow-900/20 p-4 rounded-r-lg my-4">
+                        <p class="font-bold text-yellow-400">Warning</p>
+                        <p>These examples are configured for <strong>Solana Devnet</strong>. You will need a devnet wallet with some SOL to pay for transaction fees. Do not use your mainnet private key.</p>
+                    </div>
+
+                    <h2>1. Full Swap Script (<code>swap.ts</code>)</h2>
+                    <p>This script executes an "exact input" swap of Token X for Token Y.</p>
+<pre><code><span class="token keyword">import</span> { <span class="token class-name">Connection</span>, <span class="token class-name">Keypair</span>, <span class="token class-name">PublicKey</span>, <span class="token class-name">SystemProgram</span> } <span class="token keyword">from</span> <span class="token string">'@solana/web3.js'</span>;
+<span class="token keyword">import</span> { <span class="token class-name">AnchorProvider</span>, <span class="token class-name">Program</span>, <span class="token class-name">BN</span>, <span class="token class-name">utils</span> } <span class="token keyword">from</span> <span class="token string">'@coral-xyz/anchor'</span>;
+<span class="token keyword">import</span> { <span class="token class-name">IDL</span> <span class="token keyword">as</span> <span class="token class-name">SarosDlmmIdl</span> } <span class="token keyword">from</span> <span class="token string">'@saros-finance/dlmm-sdk'</span>;
+<span class="token keyword">import</span> { <span class="token class-name">getOrCreateAssociatedTokenAccount</span> } <span class="token keyword">from</span> <span class="token string">'@solana/spl-token'</span>;
+<span class="token keyword">import</span> bs58 <span class="token keyword">from</span> <span class="token string">'bs58'</span>;
+
+<span class="token comment">// --- CONFIGURATION ---</span>
+<span class="token keyword">const</span> <span class="token constant">RPC_URL</span> = <span class="token string">'https://api.devnet.solana.com'</span>;
+<span class="token keyword">const</span> <span class="token constant">PROGRAM_ID</span> = <span class="token keyword">new</span> <span class="token class-name">PublicKey</span>(<span class="token string">'LBUZKhRxPF3XG2A2qRFF2a8sFkvv4noG2_your_program_id'</span>);
+<span class="token keyword">const</span> <span class="token constant">PAIR_ADDRESS</span> = <span class="token keyword">new</span> <span class="token class-name">PublicKey</span>(<span class="token string">'58oQChx4yWmvKdwLLZzBi4ChoCc2fqbAaGgBG5eGgX2T'</span>);
+<span class="token keyword">const</span> <span class="token constant">WALLET_SECRET_KEY</span> = <span class="token string">'YOUR_DEVNET_WALLET_SECRET_KEY_HERE'</span>;
+
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">main</span>() {
+    <span class="token comment">// Initialization...</span>
+    <span class="token keyword">const</span> connection = <span class="token keyword">new</span> <span class="token class-name">Connection</span>(<span class="token constant">RPC_URL</span>, <span class="token string">'confirmed'</span>);
+    <span class="token keyword">const</span> wallet = <span class="token class-name">Keypair</span>.<span class="token function">fromSecretKey</span>(bs58.<span class="token function">decode</span>(<span class="token constant">WALLET_SECRET_KEY</span>));
+    <span class="token keyword">const</span> provider = <span class="token keyword">new</span> <span class="token class-name">AnchorProvider</span>(connection, { <span class="token keyword">publicKey</span>: wallet.<span class="token keyword">publicKey</span>, <span class="token function">signTransaction</span>: wallet.<span class="token function">signTransaction</span>, <span class="token function">signAllTransactions</span>: wallet.<span class="token function">signAllTransactions</span> }, { <span class="token keyword">commitment</span>: <span class="token string">'confirmed'</span> });
+    <span class="token keyword">const</span> program = <span class="token keyword">new</span> <span class="token class-name">Program</span>(<span class="token class-name">SarosDlmmIdl</span>, <span class="token constant">PROGRAM_ID</span>, provider);
+    
+    <span class="token comment">// Fetching state and preparing accounts...</span>
+    <span class="token keyword">const</span> pairState = <span class="token keyword">await</span> program.<span class="token keyword">account</span>.<span class="token keyword">pair</span>.<span class="token function">fetch</span>(<span class="token constant">PAIR_ADDRESS</span>);
+    <span class="token keyword">const</span> [<span class="token constant">TOKEN_X_MINT</span>, <span class="token constant">TOKEN_Y_MINT</span>] = [pairState.<span class="token keyword">tokenMintX</span>, pairState.<span class="token keyword">tokenMintY</span>];
+    <span class="token keyword">const</span> [userVaultX, userVaultY] = <span class="token keyword">await</span> <span class="token class-name">Promise</span>.<span class="token function">all</span>([
+        <span class="token function">getOrCreateAssociatedTokenAccount</span>(connection, wallet, <span class="token constant">TOKEN_X_MINT</span>, wallet.<span class="token keyword">publicKey</span>),
+        <span class="token function">getOrCreateAssociatedTokenAccount</span>(connection, wallet, <span class="token constant">TOKEN_Y_MINT</span>, wallet.<span class="token keyword">publicKey</span>)
+    ]);
+    
+    <span class="token comment">// Deriving PDAs...</span>
+    <span class="token keyword">const</span> [tokenVaultXPda] = <span class="token class-name">PublicKey</span>.<span class="token function">findProgramAddressSync</span>([...]);
+    <span class="token keyword">const</span> [tokenVaultYPda] = <span class="token class-name">PublicKey</span>.<span class="token function">findProgramAddressSync</span>([...]);
+    <span class="token keyword">const</span> [binArrayLowerPda] = <span class="token class-name">PublicKey</span>.<span class="token function">findProgramAddressSync</span>([...]);
+    <span class="token keyword">const</span> [binArrayUpperPda] = <span class="token class-name">PublicKey</span>.<span class="token function">findProgramAddressSync</span>([...]);
+
+    <span class="token comment">// Swap Logic</span>
+    <span class="token keyword">const</span> amountIn = <span class="token keyword">new</span> <span class="token class-name">BN</span>(<span class="token number">10000</span>);
+    <span class="token keyword">const</span> txSignature = <span class="token keyword">await</span> program.<span class="token keyword">methods</span>
+        .<span class="token function">swap</span>(amountIn, <span class="token keyword">new</span> <span class="token class-name">BN</span>(<span class="token number">0</span>), <span class="token constant">true</span>, { <span class="token keyword">exactInput</span>: {} })
+        .<span class="token function">accounts</span>({...})
+        .<span class="token function">rpc</span>();
+    console.<span class="token function">log</span>(<span class="token string">`\nSwap successful! View on Solscan: https://solscan.io/tx/</span><span class="token interpolation"><span class="token punctuation">${</span>txSignature<span class="token punctuation">}</span></span><span class="token string">?cluster=devnet`</span>);
+}
+<span class="token function">main</span>().<span class="token keyword">catch</span>(console.<span class="token function">error</span>);</code></pre>
+                </section>
+
+                <section id="api-reference" class="prose prose-invert max-w-none prose-h1:text-4xl prose-h1:font-bold prose-h1:text-white prose-h2:text-2xl prose-h2:font-bold prose-h2:text-white prose-p:leading-relaxed prose-a:text-cyan-400">
+                    <h1>API Reference</h1>
+                    <p>This page provides a high-level reference for the most common instructions in the Saros DLMM SDK.</p>
+
+                    <h2>Program Instructions</h2>
+                    <h3><code>swap</code></h3>
+                    <p>Executes a token trade.</p>
+                    <ul>
+                      <li><strong>Parameters</strong>: <code>amount</code> (BN), <code>otherAmountThreshold</code> (BN), <code>swapForY</code> (boolean), <code>swapType</code> (object)</li>
+                      <li><strong>Key Accounts</strong>: <code>pair</code>, <code>binArrayLower</code>, <code>binArrayUpper</code>, <code>tokenVaultX</code>, <code>tokenVaultY</code>, <code>userVaultX</code>, <code>userVaultY</code></li>
+                    </ul>
+
+                    <h3><code>createPosition</code></h3>
+                    <p>Creates a new liquidity position NFT.</p>
+                    <ul>
+                      <li><strong>Parameters</strong>: <code>relativeBinIdLeft</code> (BN), <code>relativeBinIdRight</code> (BN)</li>
+                      <li><strong>Key Accounts</strong>: <code>pair</code>, <code>position</code> (PDA), <code>positionMint</code> (New Keypair), <code>positionTokenAccount</code>, <code>user</code></li>
+                    </ul>
+
+                    <h3><code>increasePosition</code></h3>
+                    <p>Deposits tokens into an existing position.</p>
+                    <ul>
+                      <li><strong>Parameters</strong>: <code>amountX</code> (BN), <code>amountY</code> (BN), <code>liquidityDistribution</code> (array)</li>
+                      <li><strong>Key Accounts</strong>: <code>pair</code>, <code>position</code>, <code>binArray*</code>, <code>tokenVault*</code>, <code>userVault*</code>, <code>positionTokenAccount</code></li>
+                    </ul>
+
+                    <h3><code>decreasePosition</code></h3>
+                    <p>Withdraws a specific amount of liquidity from a position.</p>
+                    <ul>
+                      <li><strong>Parameters</strong>: <code>sharesToRemove</code> (BN[])</li>
+                      <li><strong>Key Accounts</strong>: Same as <code>increasePosition</code></li>
+                    </ul>
+                </section>
+
+                <section id="sdk-analysis" class="prose prose-invert max-w-none prose-h1:text-4xl prose-h1:font-bold prose-h1:text-white prose-h2:text-2xl prose-h2:font-bold prose-h2:text-white prose-p:leading-relaxed prose-a:text-cyan-400">
+                    <h1>SDK Analysis (Bonus)</h1>
+                    <p>This section provides a constructive analysis of the Saros DLMM SDK from a developer's perspective, highlighting its strengths and identifying potential areas for improvement.</p>
+                    
+                    <h2>✅ Current Strengths</h2>
+                    <ol>
+                      <li><strong>Direct Protocol Access</strong>: The SDK provides a thin wrapper over the on-chain program, giving developers direct and granular control.</li>
+                      <li><strong>Type Safety</strong>: As a TypeScript library with an Anchor IDL, the SDK offers excellent type safety, reducing common errors.</li>
+                      <li><strong>Consistency with Anchor</strong>: The SDK follows standard Anchor conventions, making it familiar to Solana developers.</li>
+                    </ol>
+
+                    <h2>💡 Areas for Improvement & Suggestions</h2>
+                    <p>The primary opportunity for improvement lies in creating higher-level abstractions to simplify common developer workflows.</p>
+
+                    <h3>Suggestion 1: A `SarosClient` Helper Class</h3>
+                    <p>A helper class could encapsulate much of the boilerplate, especially the repetitive PDA derivations.</p>
+                    <p><strong>Proposed Workflow with `SarosClient`:</strong></p>
+<pre><code><span class="token comment">// Proposed high-level SDK</span>
+<span class="token keyword">const</span> sarosClient = <span class="token keyword">new</span> <span class="token class-name">SarosClient</span>(connection, wallet);
+<span class="token keyword">const</span> signature = <span class="token keyword">await</span> sarosClient.<span class="token function">swap</span>({
+  <span class="token keyword">pair</span>: <span class="token constant">PAIR_ADDRESS</span>,
+  <span class="token keyword">inputMint</span>: <span class="token constant">TOKEN_X_MINT</span>,
+  <span class="token keyword">outputMint</span>: <span class="token constant">TOKEN_Y_MINT</span>,
+  <span class="token keyword">amountIn</span>: <span class="token number">1_000_000</span>,
+  <span class="token keyword">slippageBps</span>: <span class="token number">50</span> <span class="token comment">// 0.5%</span>
+});</code></pre>
+
+                    <h3>Suggestion 2: Liquidity Shape Builders</h3>
+                    <p>The <code>liquidityDistribution</code> array is powerful but complex. The SDK could provide helper functions to generate common distributions.</p>
+<pre><code><span class="token keyword">import</span> { <span class="token class-name">LiquidityShapes</span> } <span class="token keyword">from</span> <span class="token string">'@saros-finance/dlmm-sdk'</span>;
+<span class="token keyword">const</span> distribution = <span class="token class-name">LiquidityShapes</span>.<span class="token function">spot</span>({ <span class="token keyword">bins</span>: <span class="token number">21</span> });
+<span class="token keyword">const</span> curved = <span class="token class-name">LiquidityShapes</span>.<span class="token function">curve</span>({ <span class="token keyword">bins</span>: <span class="token number">21</span>, <span class="token keyword">concentration</span>: <span class="token number">0.8</span> });</code></pre>
+                </section>
+            </div>
+            
+            <footer class="mt-16 pt-8 border-t border-slate-800 text-center text-slate-500">
+                <p>© 2024 Saros SDK Documentation. Built for the Superteam Challenge.</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('main section[id]');
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const id = entry.target.getAttribute('id');
+                    const correspondingLink = document.querySelector(`.sidebar-link[href="#${id}"]`);
+                    if (entry.isIntersecting) {
+                        sidebarLinks.forEach(link => link.classList.remove('active'));
+                        if (correspondingLink) {
+                            correspondingLink.classList.add('active');
+                        }
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            // Close sidebar on link click on mobile
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                       toggleSidebar();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
